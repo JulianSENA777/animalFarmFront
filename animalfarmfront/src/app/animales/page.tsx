@@ -1,87 +1,15 @@
 "use client";
 import { FaPlus, FaEdit, FaTrash, FaEye, FaFilter, FaTimes, FaPaw } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import MainLayout from '../components/MainLayout';
 import AnimalSearchFilters from './AnimalSearchFilters';
 import { getHealthStatusColor, getHealthStatusText } from './healthStatusUtils';
+import { animalService, AnimalDto } from '../service/animalService';
 
 export default function Animales() {
   const router = useRouter();
-  const [animales] = useState([
-    {
-      id: 1,
-      nombre: "Luna",
-      especie: "Perro",
-      raza: "Golden Retriever",
-      edad: 3,
-      peso: 25.5,
-      sexo: "hembra",
-      estado: "estable",
-      ubicacion: "sala1",
-      imagen: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      id: 2,
-      nombre: "Milo",
-      especie: "Gato",
-      raza: "Siamés",
-      edad: 2,
-      peso: 4.2,
-      sexo: "macho",
-      estado: "enObservacion",
-      ubicacion: "sala2",
-      imagen: "https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      id: 3,
-      nombre: "Rocky",
-      especie: "Perro",
-      raza: "Pastor Alemán",
-      edad: 5,
-      peso: 35.8,
-      sexo: "macho",
-      estado: "estable",
-      ubicacion: "sala1",
-      imagen: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      id: 4,
-      nombre: "Whiskers",
-      especie: "Gato",
-      raza: "Persa",
-      edad: 4,
-      peso: 5.1,
-      sexo: "hembra",
-      estado: "estable",
-      ubicacion: "sala3",
-      imagen: "https://images.unsplash.com/photo-1596854407944-bf87f6fdd49e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      id: 5,
-      nombre: "Bella",
-      especie: "Perro",
-      raza: "Labrador",
-      edad: 1,
-      peso: 18.3,
-      sexo: "hembra",
-      estado: "estable",
-      ubicacion: "sala2",
-      imagen: "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    },
-    {
-      id: 6,
-      nombre: "Max",
-      especie: "Perro",
-      raza: "Bulldog",
-      edad: 6,
-      peso: 22.7,
-      sexo: "macho",
-      estado: "hospitalizado",
-      ubicacion: "sala3",
-      imagen: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80"
-    }
-  ]);
+  const [animales, setAnimales] = useState<AnimalDto[]>([]);
 
   // Estados para el motor de búsqueda
   const [showSearchForm, setShowSearchForm] = useState(false);
@@ -141,6 +69,15 @@ export default function Animales() {
     });
   };
 
+  useEffect(() => {
+    animalService.listarAnimales()
+      .then(data => setAnimales(data))
+      .catch(err => {
+        // Puedes mostrar un mensaje de error o dejar la lista vacía
+        setAnimales([]);
+        console.error('Error al cargar animales:', err);
+      });
+  }, []);
 
   const filteredAnimales = animales.filter(animal => {
     if (searchFilters.nombreAnimal && !animal.nombre.toLowerCase().includes(searchFilters.nombreAnimal.toLowerCase())) {
@@ -152,7 +89,7 @@ export default function Animales() {
   return (
     <MainLayout activeMenu="Animales">
       {/* Header de la sección */}
-      <div className="mb-6">
+      <div className="my-6">
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-3xl font-bold text-green-900">Gestión de Animales</h2>
@@ -181,9 +118,9 @@ export default function Animales() {
 {/* Grid de tarjetas de animales */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredAnimales.map((animal) => (
-          <div key={animal.id} className="bg-white rounded-lg shadow-lg border border-yellow-200 overflow-hidden hover:shadow-xl transition-all duration-200 hover:scale-105">
+          <div key={animal.animalId} className="bg-white rounded-lg shadow-lg border border-yellow-200 overflow-hidden hover:shadow-xl transition-all duration-200 hover:scale-105">
             <div className="h-48 bg-gray-200 overflow-hidden cursor-pointer"
-            onClick={() => router.push(`/animales/${animal.id}`)}>
+            onClick={() => router.push(`/animales/${animal.animalId}`)}>
               <img
                 src={animal.imagen}
                 alt={animal.nombre}
@@ -198,16 +135,19 @@ export default function Animales() {
                   {getHealthStatusText(animal.estado)}
                 </span>
               </div>
-
+              <div className="mt-2">
+                <p className="text-sm text-gray-600">Raza: {animal.raza?.nombreRaza || 'Desconocida'}</p>
+                <p className="text-sm text-gray-600">Categoría: {animal.raza?.categoriaAnimal?.nombreCategoria || 'Desconocida'}</p>
+              </div>
               <div className="space-y-1 mb-3 text-sm">
                 <p className="text-green-700">
-                  <span className="font-semibold">ID:</span> {animal.id}
+                  <span className="font-semibold">ID:</span> {animal.animalId}
                 </p>
                 <p className="text-green-700">
                   <span className="font-semibold">Especie:</span> {animal.especie}
                 </p>
                 <p className="text-green-700">
-                  <span className="font-semibold">Raza:</span> {animal.raza}
+                  <span className="font-semibold">Raza:</span> {animal.raza?.nombreRaza || 'Desconocida'}
                 </p>
                 <p className="text-green-700">
                   <span className="font-semibold">Sexo:</span> {animal.sexo === 'macho' ? 'Macho' : 'Hembra'}
