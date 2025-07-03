@@ -1,232 +1,215 @@
-// components/NovedadForm.jsx
 "use client";
+import MainLayout from "../components/MainLayout";
+import AnimalNovedades from '../components/novedades/AnimalNovedades';
 import { useState } from 'react';
+import { tipoEventoLabels } from '../components/novedades/NovedadStatusUtils';
+import { FaFilter, FaTimes } from 'react-icons/fa';
 
-// Supongamos que estos serían tus enums en JavaScript/TypeScript
-// En una aplicación real, probablemente los tendrías en un archivo separado o generados.
-const tipoEvento = [
-  "Chequeo Rutinario", "Vacunación", "Tratamiento Médico", "Cirugía",
-  "Revisión Postoperatoria", "Observación", "Aislamiento", "Cambio de Dieta",
-  "Enfermedad", "Infección", "Lesión", "Parasitación", "Por Diagnosticar",
-  "Evaluación Etológica", "Nacimiento", "Fallecimiento", "Ingreso",
-  "Traslado", "Reubicación Definitiva", "De Alta", "Recuperación"
+const gravedadOptions = [
+  { value: 'baja', label: 'Baja' },
+  { value: 'media', label: 'Media' },
+  { value: 'alta', label: 'Alta' },
 ];
 
-const gravedadNovedad = [
-  "Baja", "Media", "Alta"
-];
+const tipoEventoOptions = Object.entries(tipoEventoLabels).map(([value, label]) => ({ value, label }));
 
-const NovedadForm = () => {
-  const [formData, setFormData] = useState({
+// Puedes definir un animal de ejemplo o traerlo de props/estado
+const currentAnimal = {
+  novedades: [
+    {
+      novedadId: 1,
+      titulo: "Chequeo veterinario",
+      tipo: "chequeoRutinario",
+      gravedad: "baja",
+      fechaInicioNovedad: "2024-06-01",
+      estadoNovedad: true
+    },
+    {
+      novedadId: 2,
+      titulo: "Vacunación anual",
+      tipo: "vacunacion",
+      gravedad: "media",
+      fechaInicioNovedad: "2024-05-15",
+      estadoNovedad: false
+    }
+  ]
+};
+
+export default function NovedadesPage() {
+  const [showSearchForm, setShowSearchForm] = useState(false);
+  const [searchFilters, setSearchFilters] = useState({
     tipo: '',
-    resumenNovedad: '',
     gravedad: '',
-    fechaInicioNovedad: '',
-    fechaFinalizacionNovedad: '',
-    estadoNovedad: true, // Por defecto true
-    fotoNovedad: '',
-    comentarios: '',
+    estadoNovedad: '',
+    fechaInicioDesde: '',
+    fechaFinalizacionHasta: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+  const clearFilters = () => {
+    setSearchFilters({
+      tipo: '',
+      gravedad: '',
+      estadoNovedad: '',
+      fechaInicioDesde: '',
+      fechaFinalizacionHasta: '',
+    });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Aquí puedes manejar el envío de los datos, por ejemplo a una API
-    console.log('Datos de la novedad:', formData);
+  // Filtrado de novedades según los filtros seleccionados
+  const filteredNovedades = currentAnimal.novedades.filter((novedad) => {
+    if (searchFilters.tipo && novedad.tipo !== searchFilters.tipo) return false;
+    if (searchFilters.gravedad && novedad.gravedad !== searchFilters.gravedad) return false;
+    if (searchFilters.estadoNovedad && String(novedad.estadoNovedad) !== searchFilters.estadoNovedad) return false;
+    if (searchFilters.fechaInicioDesde && new Date(novedad.fechaInicioNovedad) < new Date(searchFilters.fechaInicioDesde)) return false;
+    if (searchFilters.fechaFinalizacionHasta && novedad.fechaFinalizacionNovedad && new Date(novedad.fechaFinalizacionNovedad) > new Date(searchFilters.fechaFinalizacionHasta)) return false;
+    return true;
+  });
 
-    // Ejemplo de cómo enviar a una API (ajusta la URL y método)
-    // try {
-    //   const response = await fetch('/api/novedades', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(formData),
-    //   });
-    //   if (response.ok) {
-    //     alert('Novedad creada con éxito!');
-    //     // Resetear formulario o redirigir
-    //     setFormData({
-    //       tipo: '',
-    //       resumenNovedad: '',
-    //       gravedad: '',
-    //       fechaInicioNovedad: '',
-    //       fechaFinalizacionNovedad: '',
-    //       estadoNovedad: true,
-    //       fotoNovedad: '',
-    //       comentarios: '',
-    //     });
-    //   } else {
-    //     alert('Error al crear la novedad.');
-    //   }
-    // } catch (error) {
-    //   console.error('Error al enviar el formulario:', error);
-    //   alert('Hubo un problema al crear la novedad.');
-    // }
+  // Componente de filtros y botón exportado aquí
+  const NovedadSearchFilters: React.FC<{
+    searchFilters: any;
+    setSearchFilters: (filters: any) => void;
+    clearFilters: () => void;
+    tipoEventoOptions: { value: string; label: string }[];
+    gravedadOptions: { value: string; label: string }[];
+    showSearchForm: boolean;
+    setShowSearchForm: (show: boolean) => void;
+  }> = ({
+    searchFilters,
+    setSearchFilters,
+    clearFilters,
+    tipoEventoOptions,
+    gravedadOptions,
+    showSearchForm,
+    setShowSearchForm
+  }) => {
+    const handleFilterChange = (field: string, value: string) => {
+      setSearchFilters((prev: any) => ({
+        ...prev,
+        [field]: value,
+      }));
+    };
+    const hasActiveFilters = Object.values(searchFilters).some((value) => value !== "");
+    return (
+      <>
+        <div className="flex justify-start gap-2 mb-4">
+          <button
+            onClick={() => setShowSearchForm(!showSearchForm)}
+            className="bg-green-700 hover:bg-green-800 text-yellow-100 font-semibold px-6 py-3 rounded-lg flex items-center transition-colors shadow-md"
+          >
+            <FaFilter className="mr-2" />
+            Búsqueda Avanzada
+          </button>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-3 rounded-lg flex items-center transition-colors shadow-md"
+            >
+              <FaTimes className="mr-2" />
+              Limpiar Filtros
+            </button>
+          )}
+        </div>
+        {showSearchForm && (
+          <div className="bg-blue-50 p-6 rounded-lg shadow-lg border border-blue-200 mb-6">
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">Filtros de Novedades</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Tipo de Evento */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Evento</label>
+                <select
+                  value={searchFilters.tipo}
+                  onChange={(e) => handleFilterChange("tipo", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                >
+                  <option value="">Todos</option>
+                  {tipoEventoOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+              {/* Gravedad */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Gravedad</label>
+                <select
+                  value={searchFilters.gravedad}
+                  onChange={(e) => handleFilterChange("gravedad", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                >
+                  <option value="">Todas</option>
+                  {gravedadOptions.map((option) => (
+                    <option key={option.value} value={option.value}>{option.label}</option>
+                  ))}
+                </select>
+              </div>
+              {/* Estado */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+                <select
+                  value={searchFilters.estadoNovedad}
+                  onChange={(e) => handleFilterChange("estadoNovedad", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                >
+                  <option value="">Todos</option>
+                  <option value="true">Abierta</option>
+                  <option value="false">Cerrada</option>
+                </select>
+              </div>
+              {/* Fecha Inicio */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Inicio (desde)</label>
+                <input
+                  type="date"
+                  value={searchFilters.fechaInicioDesde}
+                  onChange={(e) => handleFilterChange("fechaInicioDesde", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                />
+              </div>
+              {/* Fecha Finalización */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Finalización (hasta)</label>
+                <input
+                  type="date"
+                  value={searchFilters.fechaFinalizacionHasta}
+                  onChange={(e) => handleFilterChange("fechaFinalizacionHasta", e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-6 pt-4 border-t border-blue-200">
+              <button
+                onClick={clearFilters}
+                className="px-4 py-2 text-blue-700 hover:text-blue-900 hover:bg-blue-100 rounded-lg transition-colors"
+              >
+                Limpiar
+              </button>
+            </div>
+          </div>
+        )}
+      </>
+    );
   };
 
   return (
-    <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-4">Crear Novedad</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Detalles Principales */}
-          <section>
-            <h2 className="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">Detalles principales</h2>
-
-            <div>
-              <label htmlFor="tipo" className="block text-sm font-medium text-gray-700 mb-1">Tipo de evento</label>
-              <select
-                id="tipo"
-                name="tipo"
-                value={formData.tipo}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm bg-white"
-              >
-                <option value="">Selecciona un tipo</option>
-                {tipoEvento.map((tipo) => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
-                ))}
-              </select>
-              <p className="mt-1 text-sm text-gray-500">Selecciona el tipo de evento que describe mejor esta novedad.</p>
+    <MainLayout activeMenu="Novedades">
+      <div className="my-6">
+        <div className="flex justify-between items-center mb-4">
+          <div>
+            <h2 className="text-3xl font-bold text-green-900">Gestión de Novedades</h2>
             </div>
-
-            <div>
-              <label htmlFor="resumenNovedad" className="block text-sm font-medium text-gray-700 mb-1">Resumen de la novedad</label>
-              <input
-                type="text"
-                id="resumenNovedad"
-                name="resumenNovedad"
-                value={formData.resumenNovedad}
-                onChange={handleChange}
-                maxLength="100"
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Título conciso y descriptivo"
-              />
-              <p className="mt-1 text-sm text-gray-500">Proporciona un título conciso y descriptivo para la novedad. Máximo 100 caracteres.</p>
-            </div>
-
-            <div>
-              <label htmlFor="gravedad" className="block text-sm font-medium text-gray-700 mb-1">Gravedad</label>
-              <select
-                id="gravedad"
-                name="gravedad"
-                value={formData.gravedad}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md shadow-sm bg-white"
-              >
-                <option value="">Selecciona la gravedad</option>
-                {gravedadNovedad.map((gravedad) => (
-                  <option key={gravedad} value={gravedad}>{gravedad}</option>
-                ))}
-              </select>
-              <p className="mt-1 text-sm text-gray-500">Indica la urgencia e impacto de esta novedad.</p>
-            </div>
-
-            <div>
-              <label htmlFor="fechaInicioNovedad" className="block text-sm font-medium text-gray-700 mb-1">Fecha de inicio</label>
-              <input
-                type="date"
-                id="fechaInicioNovedad"
-                name="fechaInicioNovedad"
-                value={formData.fechaInicioNovedad}
-                onChange={handleChange}
-                required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              <p className="mt-1 text-sm text-gray-500">Selecciona la fecha en que comenzó la novedad.</p>
-            </div>
-
-            <div>
-              <label htmlFor="fechaFinalizacionNovedad" className="block text-sm font-medium text-gray-700 mb-1">Fecha de finalización (opcional)</label>
-              <input
-                type="date"
-                id="fechaFinalizacionNovedad"
-                name="fechaFinalizacionNovedad"
-                value={formData.fechaFinalizacionNovedad}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-              <p className="mt-1 text-sm text-gray-500">Si la novedad ya ha concluido, indica la fecha de finalización.</p>
-            </div>
-          </section>
-
-          {/* Información Adicional */}
-          <section>
-            <h2 className="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">Información adicional</h2>
-
-            <div className="flex items-center mb-4">
-              <input
-                id="estadoNovedad"
-                name="estadoNovedad"
-                type="checkbox"
-                checked={formData.estadoNovedad}
-                onChange={handleChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="estadoNovedad" className="ml-2 block text-sm font-medium text-gray-700">Estado de la novedad: Activa</label>
-              <p className="ml-4 text-sm text-gray-500">Por defecto, una novedad recién creada está activa.</p>
-            </div>
-
-            <div>
-              <label htmlFor="comentarios" className="block text-sm font-medium text-gray-700 mb-1">Comentarios</label>
-              <textarea
-                id="comentarios"
-                name="comentarios"
-                value={formData.comentarios}
-                onChange={handleChange}
-                rows="5"
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Añade cualquier información detallada, contexto o pasos adicionales..."
-              ></textarea>
-              <p className="mt-1 text-sm text-gray-500">Utiliza este espacio para proporcionar toda la información relevante.</p>
-            </div>
-
-            <div>
-              <label htmlFor="fotoNovedad" className="block text-sm font-medium text-gray-700 mb-1">Foto de la novedad (URL)</label>
-              <input
-                type="text" // Para simplificar, usamos un campo de texto para la URL de la imagen
-                id="fotoNovedad"
-                name="fotoNovedad"
-                value={formData.fotoNovedad}
-                onChange={handleChange}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="Ej: https://ejemplo.com/imagen.jpg"
-              />
-              <p className="mt-1 text-sm text-gray-500">Adjunta una imagen relevante para la novedad. Puedes subir una captura de pantalla, foto del problema, etc.</p>
-            </div>
-          </section>
-
-          {/* Acciones */}
-          <div className="pt-6 border-t border-gray-200 flex justify-end space-x-3">
-            <button
-              type="button"
-              className="inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              className="inline-flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              Crear
-            </button>
-          </div>
-        </form>
+        </div>
+        {/* Botón de filtro debajo del título */}
+        <NovedadSearchFilters
+          searchFilters={searchFilters}
+          setSearchFilters={setSearchFilters}
+          clearFilters={clearFilters}
+          tipoEventoOptions={tipoEventoOptions}
+          gravedadOptions={gravedadOptions}
+          showSearchForm={showSearchForm}
+          setShowSearchForm={setShowSearchForm}
+        />
+        <AnimalNovedades currentAnimal={{ novedades: filteredNovedades }} />
       </div>
-    </div>
+    </MainLayout>
   );
-};
-
-export default NovedadForm;
+}

@@ -93,8 +93,7 @@ export default function Animales() {
         <div className="flex justify-between items-center mb-4">
           <div>
             <h2 className="text-3xl font-bold text-green-900">Gestión de Animales</h2>
-            <p className="text-green-700 mt-1">Administra la información de todos los animales registrados</p>
-          </div>
+                  </div>
           <button
             className="bg-yellow-400 hover:bg-yellow-500 text-green-900 font-semibold px-6 py-3 rounded-lg flex items-center transition-colors shadow-md"
             onClick={() => router.push('/animales/agregar-animal')}

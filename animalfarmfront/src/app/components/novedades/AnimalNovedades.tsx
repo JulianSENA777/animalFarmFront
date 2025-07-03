@@ -1,7 +1,7 @@
 import React from 'react';
 import { Info, Calendar, Eye } from 'lucide-react';
-import { getTipoEventoColor, tipoEventoLabels } from '../../Novedades/NovedadStatusUtils';
-import { getGravedadColor, getGravedadIcon } from '../../Novedades/NovedadKindStatus';
+import { getTipoEventoColor, tipoEventoLabels } from './NovedadStatusUtils';
+import { getGravedadColor, getGravedadIcon } from './NovedadKindStatus';
 
 interface AnimalNovedadesProps {
   currentAnimal: any;
@@ -48,7 +48,7 @@ const AnimalNovedades: React.FC<AnimalNovedadesProps> = ({ currentAnimal }) => {
                       </div>
                       <div className="flex items-center space-x-1">
                         <div className={`w-2 h-2 rounded-full ${novedad.estadoNovedad ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                        <span className="text-xs">{novedad.estadoNovedad ? 'Activa' : 'Inactiva'}</span>
+                        <span className="text-xs">{novedad.estadoNovedad ? 'Abierta' : 'Cerrada'}</span>
                       </div>
                     </div>
                   </div>

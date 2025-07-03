@@ -8,13 +8,13 @@ interface MainLayoutProps {
 }
 
 const menuItems = [
-  { id: 1, name: "Inicio", icon: FaHome },
-  { id: 2, name: "Perfil", icon: FaUser },
-  { id: 3, name: "Funcionarios", icon: FaUsers },
-  { id: 4, name: "Novedades", icon: FaBell },
-  { id: 5, name: "Animales", icon: FaPaw },
-  { id: 6, name: "Historias Clínicas", icon: FaNotesMedical },
-  { id: 7, name: "Lugares", icon: FaMapMarkerAlt },
+  { id: 1, name: "Inicio", icon: FaHome, route: "/" },
+  { id: 2, name: "Perfil", icon: FaUser, route: "/perfiles" },
+  { id: 3, name: "Funcionarios", icon: FaUsers, route: "/funcionario" },
+  { id: 4, name: "Novedades", icon: FaBell, route: "/novedades" },
+  { id: 5, name: "Animales", icon: FaPaw, route: "/animales" },
+  { id: 6, name: "Historias Clínicas", icon: FaNotesMedical, route: "/historia-clinica" },
+  { id: 7, name: "Lugares", icon: FaMapMarkerAlt, route: "/lugares" },
 ];
 
 export default function MainLayout({ children, activeMenu }: MainLayoutProps) {
@@ -48,11 +48,8 @@ export default function MainLayout({ children, activeMenu }: MainLayoutProps) {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = item.name === activeMenu;
-            // Redirigir solo para "Animales"
             const handleClick = () => {
-              if (item.name === "Animales") {
-                window.location.href = "/animales";
-              }
+              window.location.href = item.route;
             };
             return (
               <div

@@ -5,10 +5,10 @@ import { MapPin, Calendar, Weight, Info, Camera, User, Heart, Eye } from 'lucide
 import { GiDog, GiCat, GiCow, GiWeight, GiBarn, GiInfo, GiCalendar, GiFemale, GiMale } from 'react-icons/gi';
 import MainLayout from '../../components/MainLayout';
 import { getHealthStatusColor, getHealthStatusText } from '../healthStatusUtils';
-import { getTipoEventoColor, tipoEventoLabels } from '../../Novedades/NovedadStatusUtils';
-import { getGravedadColor, getGravedadIcon } from '../../Novedades/NovedadKindStatus';
+import { getTipoEventoColor, tipoEventoLabels } from '../../components/novedades/NovedadsUtils';
+import { getGravedadColor, getGravedadIcon } from '../../components/novedades/NovedadKindStatus';
 import AnimalProfileGeneral from './AnimalProfileGeneral';
-import AnimalNovedades from './AnimalNovedades';
+import AnimalNovedades from '../../components/novedades/AnimalNovedades';
 
 const AnimalProfile = () => {
   // Datos de ejemplo

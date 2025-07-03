@@ -127,7 +127,7 @@ const AnimalProfileGeneral: React.FC<AnimalProfileGeneralProps> = ({ currentAnim
                 </div>
                 <div>
                   <span className="font-medium">Estado:</span>
-                  <p>{currentAnimal.estado ? 'Activo' : 'Inactivo'}</p>
+                  <p>{currentAnimal.estado ? 'Abierto' : 'Cerrado'}</p>
                 </div>
               </div>
             </div>
