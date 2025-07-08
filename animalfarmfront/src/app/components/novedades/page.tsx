@@ -1,5 +1,5 @@
 "use client";
-import MainLayout from "../components/MainLayout";
+import MainLayout from "../../components/MainLayout";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 // Puedes importar aquí los íconos y utilidades necesarias, por ejemplo:
