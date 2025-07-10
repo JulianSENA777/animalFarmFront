@@ -72,7 +72,7 @@ const ListaVacunas = () => {
             <p className="text-gray-500">Agrega tu primera vacuna</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 w-full max-w-3xl mx-auto">
+          <div className="flex flex-col items-center gap-6 w-full">
             {items.map((item) => (
               <TarjetaDetalle
                 key={item.id}

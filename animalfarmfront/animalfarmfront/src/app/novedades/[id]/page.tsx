@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Calendar, User, MapPin, Heart, Shield, FileText, Camera, Clock, AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { Calendar, User, MapPin, Shield, FileText, Camera, Clock, AlertTriangle, Eye, EyeOff, Info } from 'lucide-react';
+import { faCow } from 'lucide-react/fa';
+import MainLayout from "@/app/components/MainLayout";
+import { getTipoEventoColor, tipoEventoLabels } from "@/app/components/novedades/NovedadStatusUtils";
 
 const NovedadDetailView = () => {
   const [mostrarImagen, setMostrarImagen] = useState(false);
@@ -17,7 +20,32 @@ const NovedadDetailView = () => {
     estadoNovedad: true,
     ultimaActualizacionNovedad: '2024-01-20T14:30:00',
     fotoNovedad: 'https://via.placeholder.com/400x300/4f46e5/ffffff?text=Foto+Novedad',
-    comentarios: 'Se ha detectado un brote de fiebre aftosa en el sector norte de la granja. Se implementaron medidas de cuarentena inmediata y se notificó a las autoridades sanitarias correspondientes. El tratamiento veterinario ha comenzado y se espera una recuperación gradual en las próximas semanas.',
+    comentarios: [
+      {
+        id: 1,
+        fecha: '2024-01-15T08:00:00',
+        autor: 'Dr. Carlos Mendoza',
+        contenido: 'Se ha detectado un brote de fiebre aftosa en el sector norte de la granja. Se implementaron medidas de cuarentena inmediata y se notificó a las autoridades sanitarias correspondientes.'
+      },
+      {
+        id: 2,
+        fecha: '2024-01-16T14:30:00',
+        autor: 'Dra. Ana Rodríguez',
+        contenido: 'El tratamiento veterinario ha comenzado con la aplicación de medicamentos antivirales. Se observa una ligera mejora en algunos animales.'
+      },
+      {
+        id: 3,
+        fecha: '2024-01-18T10:15:00',
+        autor: 'Dr. Carlos Mendoza',
+        contenido: 'Se realizó una segunda evaluación. Los animales están respondiendo bien al tratamiento. Se espera una recuperación gradual en las próximas semanas.'
+      },
+      {
+        id: 4,
+        fecha: '2024-01-20T16:45:00',
+        autor: 'Veterinario Juan Pérez',
+        contenido: 'Control de seguimiento realizado. Se ha reducido la propagación del virus. Continuamos con el protocolo de tratamiento establecido.'
+      }
+    ],
     usuario: {
       usuarioId: 1,
       nombre: 'Dr. Carlos Mendoza',
@@ -98,233 +126,239 @@ const NovedadDetailView = () => {
     });
   };
 
+  // Adaptar el tipo para usar el label y color de NovedadStatusUtils
+  const tipoNovedadKey = novedad.tipo.toLowerCase();
+  const tipoNovedadLabel = tipoEventoLabels[tipoNovedadKey] || novedad.tipo;
+  const tipoNovedadColor = getTipoEventoColor(tipoNovedadKey);
+
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Novedad #{novedad.novedadId}
-          </h1>
-          <div className="flex items-center space-x-3">
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${getTipoColor(novedad.tipo)}`}>
-              {novedad.tipo}
-            </span>
-            <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getGravedadColor(novedad.gravedad)}`}>
-              {novedad.gravedad}
-            </span>
-            <span className={`px-3 py-1 rounded-full text-sm font-medium ${novedad.estadoNovedad ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-              {novedad.estadoNovedad ? 'Activo' : 'Inactivo'}
-            </span>
-          </div>
-        </div>
-
-        <p className="text-xl text-gray-700 mb-4">{novedad.nombreNovedad}</p>
-
-        <div className="flex items-center space-x-6 text-sm text-gray-600">
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-1" />
-            <span>Última actualización: {formatDateTime(novedad.ultimaActualizacionNovedad)}</span>
-          </div>
-          <div className="flex items-center">
-            <User className="h-4 w-4 mr-1" />
-            <span>Por: {novedad.usuario.nombre}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {/* Left Column - Main Info */}
-        <div className="lg:col-span-2 space-y-6">
-
-          {/* Información General */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-4 flex items-center">
-              <FileText className="h-5 w-5 mr-2 text-gray-600" />
-              Información General
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Fechas */}
-              <div>
-                <h4 className="text-md font-medium mb-3 flex items-center">
-                  <Calendar className="h-4 w-4 mr-2 text-gray-600" />
-                  Fechas Importantes
-                </h4>
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Fecha de Inicio</p>
-                    <p className="text-gray-900">{formatDate(novedad.fechaInicioNovedad)}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Fecha de Finalización</p>
-                    <p className="text-gray-900">{formatDate(novedad.fechaFinalizacionNovedad)}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Estado de Salud */}
-              <div>
-                <h4 className="text-md font-medium mb-3 flex items-center">
-                  <Shield className="h-4 w-4 mr-2 text-gray-600" />
-                  Estado de Salud
-                </h4>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${getEstadoSaludColor(novedad.estadoSaludDestino)}`}>
-                  {novedad.estadoSaludDestino?.replace('_', ' ')}
-                </span>
-              </div>
-
-              {/* Historia Clínica */}
-              <div>
-                <h4 className="text-md font-medium mb-3">Historia Clínica</h4>
-                <p className="text-gray-900 font-medium">{novedad.historiaClinica.numeroHistoria}</p>
-              </div>
-
-              {/* Enfermedades */}
-              {novedad.enfermedades.length > 0 && (
-                <div>
-                  <h4 className="text-md font-medium mb-3 flex items-center">
-                    <AlertTriangle className="h-4 w-4 mr-2 text-red-600" />
-                    Enfermedades
-                  </h4>
-                  <div className="space-y-2">
-                    {novedad.enfermedades.map((enfermedad) => (
-                      <div key={enfermedad.enfermedadId} className="bg-red-50 p-2 rounded-lg border border-red-200">
-                        <p className="text-red-900 font-medium text-sm">{enfermedad.nombre}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+    <MainLayout activeMenu="Novedades">
+      <div className="max-w-6xl mx-auto p-6 bg-yellow-50 min-h-screen">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h1 className="text-3xl font-bold text-green-900 drop-shadow-sm">
+              {novedad.historiaClinica.numeroHistoria}
+            </h1>
+            <div className="flex items-center space-x-3">
+              <span className={`px-3 py-1 rounded-full text-sm font-bold border shadow-sm ${novedad.estadoNovedad ? 'bg-green-100 text-green-800 border-green-300' : 'bg-gray-100 text-gray-800 border-gray-300'}`}>
+                {novedad.estadoNovedad ? 'Activo' : 'Inactivo'}
+              </span>
             </div>
           </div>
-
-          {/* Resumen de la Novedad */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3">Resumen de la Novedad</h3>
-            <p className="text-gray-700 leading-relaxed">{novedad.resumenNovedad}</p>
-          </div>
-
-          {/* Animales Afectados */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3 flex items-center">
-              <Heart className="h-5 w-5 mr-2 text-gray-600" />
-              Animales Afectados
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {novedad.animales.map((animal) => (
-                <div key={animal.animalId} className="bg-white p-3 rounded-lg border">
-                  <p className="font-medium text-gray-900">{animal.nombre}</p>
-                  <p className="text-sm text-gray-600">{animal.especie}</p>
-                </div>
-              ))}
+          <p className="text-xl text-green-800 font-semibold mb-4 drop-shadow-sm">{novedad.nombreNovedad}</p>
+          <div className="flex items-center space-x-6 text-sm text-green-900 font-medium">
+            <div className="flex items-center">
+              <Clock className="h-4 w-4 mr-1" />
+              <span>Última actualización: {formatDateTime(novedad.ultimaActualizacionNovedad)}</span>
             </div>
           </div>
-
-          {/* Botón para mostrar imagen */}
-          <div className="flex justify-start">
-            <button
-              onClick={() => setMostrarImagen(!mostrarImagen)}
-              className="flex items-center px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              {mostrarImagen ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-              {mostrarImagen ? 'Ocultar imagen' : 'Mostrar imagen de la novedad'}
-            </button>
-          </div>
-
-          {/* Foto */}
-          {mostrarImagen && novedad.fotoNovedad && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3 flex items-center">
-                <Camera className="h-5 w-5 mr-2 text-gray-600" />
-                Documentación Fotográfica
+        </div>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Main Info */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Información General */}
+            <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+              <h3 className="text-lg font-bold mb-4 flex items-center text-green-900">
+                <FileText className="h-5 w-5 mr-2 text-green-700" />
+                Información General
               </h3>
-              <img
-                src={novedad.fotoNovedad}
-                alt="Foto de la novedad"
-                className="w-full max-w-md mx-auto rounded-lg shadow-md"
-              />
-            </div>
-          )}
-
-          {/* Comentarios */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3 flex items-center">
-              <FileText className="h-5 w-5 mr-2 text-gray-600" />
-              Comentarios y Observaciones
-            </h3>
-            <p className="text-gray-700 leading-relaxed">{novedad.comentarios}</p>
-          </div>
-
-        </div>
-
-        {/* Right Column - Details */}
-        <div className="space-y-6">
-
-          {/* Ubicaciones */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-lg font-semibold mb-3 flex items-center">
-              <MapPin className="h-5 w-5 mr-2 text-gray-600" />
-              Ubicaciones Involucradas
-            </h3>
-            <div className="space-y-2">
-              {novedad.ubicaciones.map((ubicacion) => (
-                <div key={ubicacion.ubicacionId} className="bg-white p-3 rounded-lg border">
-                  <p className="text-gray-900">{ubicacion.nombre}</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Tipo de Novedad */}
+                <div>
+                  <h4 className="text-md font-bold mb-3 flex items-center text-green-800">
+                    <Info className="h-4 w-4 mr-2 text-green-700" />
+                    Tipo de Novedad
+                  </h4>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border shadow-sm ${tipoNovedadColor}`}>{tipoNovedadLabel}</span>
                 </div>
-              ))}
+                {/* Fechas */}
+                <div>
+                  <h4 className="text-md font-bold mb-3 flex items-center text-green-800">
+                    <Calendar className="h-4 w-4 mr-2 text-green-700" />
+                    Fechas Importantes
+                  </h4>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm font-bold text-green-700">Fecha de Inicio</p>
+                      <p className="text-green-900 font-semibold">{formatDate(novedad.fechaInicioNovedad)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-green-700">Fecha de Finalización</p>
+                      <p className="text-green-900 font-semibold">{formatDate(novedad.fechaFinalizacionNovedad)}</p>
+                    </div>
+                  </div>
+                </div>
+                {/* Usuario */}
+                <div>
+                  <h4 className="text-md font-bold mb-3 flex items-center text-green-800">
+                    <User className="h-4 w-4 mr-2 text-green-700" />
+                    Usuario Responsable
+                  </h4>
+                  <div>
+                    <p className="text-green-900 font-bold">{novedad.usuario.nombre}</p>
+                    <p className="text-sm text-green-700 font-semibold">{novedad.usuario.email}</p>
+                  </div>
+                </div>
+                {/* Enfermedades */}
+                {novedad.enfermedades.length > 0 && (
+                  <div>
+                    <h4 className="text-md font-bold mb-3 flex items-center text-red-800">
+                      <AlertTriangle className="h-4 w-4 mr-2 text-red-700" />
+                      Enfermedades
+                    </h4>
+                    <div className="space-y-2">
+                      {novedad.enfermedades.map((enfermedad) => (
+                        <div key={enfermedad.enfermedadId} className="bg-red-50 p-2 rounded-lg border border-red-200">
+                          <p className="text-red-900 font-bold text-sm">{enfermedad.nombre}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {/* Gravedad */}
+                <div>
+                  <h4 className="text-md font-bold mb-3 flex items-center text-green-800">
+                    <Shield className="h-4 w-4 mr-2 text-green-700" />
+                    Nivel de Gravedad
+                  </h4>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border shadow-sm ${getGravedadColor(novedad.gravedad)}`}>{novedad.gravedad}</span>
+                </div>
+                {/* Estado de Salud */}
+                <div>
+                  <h4 className="text-md font-bold mb-3 flex items-center text-green-800">
+                    <Shield className="h-4 w-4 mr-2 text-green-700" />
+                    Estado de Salud
+                  </h4>
+                  <span className={`px-3 py-1 rounded-full text-sm font-bold border shadow-sm ${getEstadoSaludColor(novedad.estadoSaludDestino)}`}>{novedad.estadoSaludDestino?.replace('_', ' ')}</span>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Partes Afectadas */}
-          {novedad.partesAfectadas.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3">Partes Afectadas</h3>
-              <div className="space-y-2">
-                {novedad.partesAfectadas.map((parte) => (
-                  <div key={parte.parteAfectadaId} className="bg-white p-2 rounded border">
-                    <p className="text-gray-900">{parte.nombre}</p>
+            {/* Resumen de la Novedad */}
+            <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+              <h3 className="text-lg font-bold mb-3 text-green-900">Resumen de la Novedad</h3>
+              <p className="text-green-800 leading-relaxed font-semibold">{novedad.resumenNovedad}</p>
+            </div>
+            {/* Animales Afectados */}
+            <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+              <h3 className="text-lg font-bold mb-3 flex items-center text-green-900">
+                <span className="mr-2">🐄</span>
+                Animales Afectados
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {novedad.animales.map((animal) => (
+                  <div key={animal.animalId} className="bg-green-50 p-3 rounded-lg border border-green-200">
+                    <p className="font-bold text-green-900">{animal.nombre}</p>
+                    <p className="text-sm text-green-700 font-semibold">{animal.especie}</p>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
-          {/* Tratamientos */}
-          {(novedad.vacunas.length > 0 || novedad.desparasitaciones.length > 0) && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-3">Tratamientos</h3>
-
-              {novedad.vacunas.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-sm font-medium text-gray-600 mb-2">Vacunas</p>
-                  {novedad.vacunas.map((vacuna) => (
-                    <div key={vacuna.vacunaId} className="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-2">
-                      <p className="text-blue-900 font-medium">{vacuna.nombre}</p>
-                      <p className="text-sm text-blue-700">Lote: {vacuna.lote}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {novedad.desparasitaciones.length > 0 && (
-                <div>
-                  <p className="text-sm font-medium text-gray-600 mb-2">Desparasitaciones</p>
-                  {novedad.desparasitaciones.map((desparasitacion) => (
-                    <div key={desparasitacion.desparasitacionId} className="bg-purple-50 p-3 rounded-lg border border-purple-200 mb-2">
-                      <p className="text-purple-900 font-medium">{desparasitacion.nombre}</p>
-                      <p className="text-sm text-purple-700">Dosis: {desparasitacion.dosis}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Botón para mostrar imagen */}
+            <div className="flex justify-start">
+              <button
+                onClick={() => setMostrarImagen(!mostrarImagen)}
+                className="flex items-center px-3 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-bold shadow"
+              >
+                {mostrarImagen ? <EyeOff className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                {mostrarImagen ? 'Ocultar imagen' : 'Mostrar imagen de la novedad'}
+              </button>
             </div>
-          )}
-
+            {/* Foto */}
+            {mostrarImagen && novedad.fotoNovedad && (
+              <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+                <h3 className="text-lg font-bold mb-3 flex items-center text-green-900">
+                  <Camera className="h-5 w-5 mr-2 text-green-700" />
+                  Documentación Fotográfica
+                </h3>
+                <img
+                  src={novedad.fotoNovedad}
+                  alt="Foto de la novedad"
+                  className="w-full max-w-md mx-auto rounded-lg shadow-md border border-green-200"
+                />
+              </div>
+            )}
+            {/* Comentarios */}
+            <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+              <h3 className="text-lg font-bold mb-3 flex items-center text-green-900">
+                <FileText className="h-5 w-5 mr-2 text-green-700" />
+                Comentarios y Observaciones
+              </h3>
+              <div className="space-y-3">
+                {novedad.comentarios.map((comentario) => (
+                  <div key={comentario.id} className="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-sm font-bold text-green-900">{comentario.autor}</p>
+                      <p className="text-xs text-green-700 font-semibold">{formatDateTime(comentario.fecha)}</p>
+                    </div>
+                    <p className="text-green-800 leading-relaxed font-semibold">{comentario.contenido}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* Right Column - Details */}
+          <div className="space-y-6">
+            {/* Ubicaciones */}
+            <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+              <h3 className="text-lg font-bold mb-3 flex items-center text-green-900">
+                <MapPin className="h-5 w-5 mr-2 text-green-700" />
+                Ubicaciones Involucradas
+              </h3>
+              <div className="space-y-2">
+                {novedad.ubicaciones.map((ubicacion) => (
+                  <div key={ubicacion.ubicacionId} className="bg-green-50 p-3 rounded-lg border border-green-200">
+                    <p className="text-green-900 font-bold">{ubicacion.nombre}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Partes Afectadas */}
+            {novedad.partesAfectadas.length > 0 && (
+              <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+                <h3 className="text-lg font-bold mb-3 text-green-900">Partes Afectadas</h3>
+                <div className="space-y-2">
+                  {novedad.partesAfectadas.map((parte) => (
+                    <div key={parte.parteAfectadaId} className="bg-green-50 p-2 rounded border border-green-200">
+                      <p className="text-green-900 font-bold">{parte.nombre}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {/* Tratamientos */}
+            {(novedad.vacunas.length > 0 || novedad.desparasitaciones.length > 0) && (
+              <div className="bg-white rounded-lg p-4 shadow border border-yellow-200">
+                <h3 className="text-lg font-bold mb-3 text-green-900">Tratamientos</h3>
+                {novedad.vacunas.length > 0 && (
+                  <div className="mb-4">
+                    <p className="text-sm font-bold text-green-700 mb-2">Vacunas</p>
+                    {novedad.vacunas.map((vacuna) => (
+                      <div key={vacuna.vacunaId} className="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-2">
+                        <p className="text-blue-900 font-bold">{vacuna.nombre}</p>
+                        <p className="text-sm text-blue-700 font-semibold">Lote: {vacuna.lote}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {novedad.desparasitaciones.length > 0 && (
+                  <div>
+                    <p className="text-sm font-bold text-purple-700 mb-2">Desparasitaciones</p>
+                    {novedad.desparasitaciones.map((desparasitacion) => (
+                      <div key={desparasitacion.desparasitacionId} className="bg-purple-50 p-3 rounded-lg border border-purple-200 mb-2">
+                        <p className="text-purple-900 font-bold">{desparasitacion.nombre}</p>
+                        <p className="text-sm text-purple-700 font-semibold">Dosis: {desparasitacion.dosis}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </MainLayout>
   );
 };
 

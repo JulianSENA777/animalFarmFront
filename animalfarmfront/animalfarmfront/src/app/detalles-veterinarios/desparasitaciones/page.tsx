@@ -1,4 +1,5 @@
 "use client";
+
 import React from 'react';
 import MainLayout from '../../components/MainLayout';
 import { useRouter } from 'next/navigation';
@@ -16,7 +17,9 @@ export default function DesparasitacionesPage() {
             <AgregarElemento label="Agregar Desparasitacion" color="yellow" onClick={() => router.push('./desparasitaciones/agregar-desparacitacion')} />
           </div>
         </div>
+        <div className="flex-col items-center gap-6 w-5/6 mx-auto">
         <ListaDesparasitaciones />
+        </div>
       </div>
     </MainLayout>
   );

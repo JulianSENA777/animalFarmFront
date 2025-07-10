@@ -14,10 +14,10 @@ export default function PartesAfectadasPage() {
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold text-green-900">Gestión de Partes Afectadas</h1>
-            <AgregarElemento label="Agregar Parte Afectada" color="yellow" onClick={() => router.push('./partes-afectadas/agregar-parte-afectada')} />
+            <AgregarElemento label="Agregar Parte Afectada" color="yellow" onClick={() => router.push('./razas/agregar-razas')} />
           </div>
         </div>
-                <div className="flex-col items-center gap-6 w-5/6 mx-auto">
+        <div className="flex-col items-center gap-6 w-5/6 mx-auto">
         <ListaPartesAfectadas />
         </div>
       </div>

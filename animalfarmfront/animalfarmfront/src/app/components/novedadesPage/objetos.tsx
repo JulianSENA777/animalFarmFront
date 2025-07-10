@@ -5,7 +5,7 @@ interface TarjetaDetalleProps {
   nombre: string;
   tipo: string;
   onVerDetalle?: () => void;
-  // Puedes agregar más props si necesitas mostrar más información
+
 }
 
 const TarjetaDetalle: React.FC<TarjetaDetalleProps> = ({ nombre, tipo, onVerDetalle, ...props }) => {

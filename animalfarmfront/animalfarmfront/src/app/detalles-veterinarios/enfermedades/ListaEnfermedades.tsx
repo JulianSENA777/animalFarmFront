@@ -113,7 +113,7 @@ const ListaEnfermedades = () => {
 						<p className="text-gray-500">Agrega tu primera enfermedad</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-1 gap-6 w-full max-w-3xl mx-auto">
+                   <div className="flex flex-col items-center gap-6 w-full">
 						{enfermedades.map((enfermedad) => (
 							<TarjetaDetalle
 								key={enfermedad.enfermedadId}

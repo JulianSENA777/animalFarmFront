@@ -2,22 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, Eye } from 'lucide-react';
+import AgregarElemento from '../../components/agregarElemento/Agregar';
 import TarjetaDetalle from '../../components/detalles-veterinarios/objetos';
 
-const desparasitacionesEjemplo = [
+const partesEjemplo = [
   {
     id: 1,
-    nombre: 'Desparasitación Interna',
-    tipo: 'Interna',
+    nombre: 'COMIDA',
+    tipo: 'Extremidad',
   },
   {
     id: 2,
-    nombre: 'Desparasitación Externa',
-    tipo: 'Externa',
+    nombre: 'Oreja Derecha',
+    tipo: 'Cabeza',
   },
 ];
 
-const ListaDesparasitaciones = () => {
+const ListaPartesAfectadas = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -26,10 +27,10 @@ const ListaDesparasitaciones = () => {
     setLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
-      setItems(desparasitacionesEjemplo);
+      setItems(partesEjemplo);
       setError('');
     } catch (err) {
-      setError('Error al cargar las desparasitaciones');
+      setError('Error al cargar las partes afectadas');
     } finally {
       setLoading(false);
     }
@@ -55,7 +56,7 @@ const ListaDesparasitaciones = () => {
   return (
     <div className="bg-white rounded-lg shadow-lg border border-green-100 overflow-hidden mt-6">
       <div className="flex items-center justify-between p-6 border-b border-green-200 bg-green-50">
-        <h3 className="text-xl font-bold text-green-900">Desparasitaciones</h3>
+        <h3 className="text-xl font-bold text-green-900">Partes Afectadas</h3>
       </div>
       <div className="p-6">
         {error && (
@@ -67,8 +68,8 @@ const ListaDesparasitaciones = () => {
         {items.length === 0 ? (
           <div className="text-center py-12">
             <AlertCircle className="mx-auto text-gray-400 mb-4" size={48} />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron desparasitaciones</h3>
-            <p className="text-gray-500">Agrega tu primera desparasitación</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron partes afectadas</h3>
+            <p className="text-gray-500">Agrega tu primera parte afectada</p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-6 w-full">
@@ -87,4 +88,4 @@ const ListaDesparasitaciones = () => {
   );
 };
 
-export default ListaDesparasitaciones;
+export default ListaPartesAfectadas;

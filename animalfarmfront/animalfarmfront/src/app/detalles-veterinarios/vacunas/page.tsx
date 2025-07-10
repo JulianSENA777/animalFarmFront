@@ -1,4 +1,5 @@
 "use client";
+
 import React from 'react';
 import MainLayout from '../../components/MainLayout';
 import AgregarElemento from '../../components/agregarElemento/Agregar';
@@ -16,7 +17,9 @@ export default function VacunasPage() {
             <AgregarElemento label="Agregar Vacuna" color="yellow" onClick={() => router.push('./vacunas/agregar-vacuna')} />
           </div>
         </div>
-        <ListaVacunas />
+         <div className="flex-col items-center gap-6 w-5/6 mx-auto">
+        < ListaVacunas />
+        </div>
       </div>
     </MainLayout>
   );

@@ -19,14 +19,16 @@ const menuItems = [
 const animalSubMenu = [
   { id: 'buscar', name: 'Buscar Animal', route: '/animales/buscaranimal' },
   { id: 'agregar', name: 'Agregar Animal', route: '/animales/agregar-animal' },
-  { id: 'actualizar', name: 'Actualizar Animal', route: '/animales/Actualizar-Animal' },
+  { id: 'actualizar', name: 'Actualizar Animal', route: '/animales/actualizar-Animal' },
+  { id: 'categoria-animal', name: 'Categoria animal', route: '/animales/categoria-animal' },
+  { id: 'razas', name: 'Actualizar Animal', route: '/animales/razas' },
 ];
 
 const DetallesVSubMenu = [
   { id: 'desparasitacion', name: 'desparasitaciones', route: '/detalles-veterinarios/desparasitaciones' },
   { id: 'enfermedad', name: 'enfermedades', route: '/detalles-veterinarios/enfermedades' },
   { id: 'parteAfectada', name: 'partes afectadas', route: '/detalles-veterinarios/partes-afectadas' },
-    { id: 'vacuna', name: 'vacunas', route: '/detalles-veterinarios/vacunas' },
+  { id: 'vacuna', name: 'vacunas', route: '/detalles-veterinarios/vacunas' },
 ];
 
 export default function MainLayout({ children, activeMenu }: MainLayoutProps) {
