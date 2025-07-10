@@ -15,6 +15,7 @@
       <change afterPath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/src/app/components/novedades/NovedadesPage.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/src/app/components/novedadesPage/objetos.tsx" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/src/app/novedades/[id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/animalFarmFront/animalfarmfront/package.json" afterDir="false" />
@@ -72,15 +73,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Repositorio/animalFarmFront/animalfarmfront/src/app/animales/razas"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Repositorio/animalFarmFront/animalfarmfront/src/app/animales/razas&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Repositorio\animalFarmFront\animalfarmfront\src\app\animales\razas" />
